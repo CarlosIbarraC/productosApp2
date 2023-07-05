@@ -24,6 +24,7 @@ class ProductoTarjeta extends StatelessWidget {
               Positioned(top: 0, left: 0, child: EtiquetaDisponible())
             ]),
           ),
+         
           SizedBox(
             height: 40,
           )
