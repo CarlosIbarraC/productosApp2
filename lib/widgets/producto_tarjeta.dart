@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:product_app_2/models/models.dart';
 
@@ -18,17 +20,20 @@ class ProductoTarjeta extends StatelessWidget {
             height: 400,
             decoration: _bordesTarjeta(),
             child: Stack(alignment: Alignment.bottomLeft, children: [
+             
               _FondoImagen(product.imagen),
-              _DetalleProducto(),
-              Positioned(top: 0, right: 0, child: _EtiquetaPrecio()),
-              Positioned(top: 0, left: 0, child: EtiquetaDisponible())
+              _DetalleProducto(product.nombre, product.id!),
+              Positioned(top: 0, right: 0, child: _EtiquetaPrecio(product.precio)),
+              // if(product.disponible)
+              Positioned(
+                  top: 0,
+                  left: 0,
+                  child: EtiquetaDisponible(disponible: product.disponible))
             ]),
           ),
-         
           SizedBox(
             height: 40,
           )
-         
         ],
       ),
     );
@@ -49,8 +54,15 @@ class ProductoTarjeta extends StatelessWidget {
 }
 
 class EtiquetaDisponible extends StatelessWidget {
+  final bool disponible;
+
+  const EtiquetaDisponible({Key? key, required this.disponible})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
+    if (disponible) {
+      return Container();
+    }
     return Container(
       child: Text(
         'NO Disponible',
@@ -71,6 +83,9 @@ class EtiquetaDisponible extends StatelessWidget {
 }
 
 class _EtiquetaPrecio extends StatelessWidget {
+  final double precio;
+
+  const _EtiquetaPrecio(  this.precio) ;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,7 +94,7 @@ class _EtiquetaPrecio extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-            '\$10003.99',
+            '\$$precio',
             style: TextStyle(
               color: Colors.deepPurple,
               fontSize: 18,
@@ -99,6 +114,10 @@ class _EtiquetaPrecio extends StatelessWidget {
 }
 
 class _DetalleProducto extends StatelessWidget {
+  final String nombre;
+  final String id;
+
+  const _DetalleProducto(this.nombre, this.id);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -117,7 +136,7 @@ class _DetalleProducto extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Producto1',
+                nombre,
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.deepPurple,
@@ -126,7 +145,7 @@ class _DetalleProducto extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                'especificaciones',
+                id,
                 style: TextStyle(fontSize: 12, color: Colors.deepPurple),
               )
             ],
@@ -143,12 +162,14 @@ class _FondoImagen extends StatelessWidget {
   const _FondoImagen(this.url);
   @override
   Widget build(BuildContext context) {
+    
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
         width: double.infinity,
         height: 400,
-        child: FadeInImage(
+        child:url==null?Image(image:AssetImage('assets/no-image.png'), fit: BoxFit.cover):        
+        FadeInImage(
           placeholder: AssetImage('assets/jar-loading.gif'),
           image: NetworkImage(url!),
           fit: BoxFit.cover,

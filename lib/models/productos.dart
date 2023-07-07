@@ -11,13 +11,12 @@ class Productos {
   double precio;
   String? id;
 
-  Productos({
-    required this.disponible,
-    this.imagen,
-    required this.nombre,
-    required this.precio,
-    this.id
-  });
+  Productos(
+      {required this.disponible,
+      this.imagen,
+      required this.nombre,
+      required this.precio,
+      this.id});
 
   factory Productos.fromRawJson(String str) =>
       Productos.fromJson(json.decode(str));
@@ -37,4 +36,10 @@ class Productos {
         "nombre": nombre,
         "precio": precio,
       };
+  Productos copy() => Productos(
+      disponible: disponible,
+      nombre: nombre,
+      precio: precio,
+      imagen: imagen,
+      id: id);
 }
