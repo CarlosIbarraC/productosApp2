@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:product_app_2/Servicios/servicios.dart';
-import 'package:product_app_2/models/models.dart';
-import 'package:product_app_2/providers/producto_desde_provider.dart';
+import 'package:product_app_2/providers/providers.dart';
 import 'package:product_app_2/userInterface/decoracionInputs.dart';
 import 'package:product_app_2/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +32,8 @@ class _cuerpoPantallaProducto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        // se oculta el teclado al hacer scroll
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           children: [
             Stack(
@@ -83,6 +85,7 @@ class _cuerpoPantallaProducto extends StatelessWidget {
 class _FormularioProducto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final productoIni = Provider.of<ProductoDesdeProvider>(context);
     final productoFormulario =
         Provider.of<ProductoDesdeProvider>(context).producto;
     return Padding(
@@ -112,6 +115,10 @@ class _FormularioProducto extends StatelessWidget {
             SizedBox(height: 40),
             TextFormField(
               initialValue: '${productoFormulario.precio}',
+              inputFormatters: [
+                (FilteringTextInputFormatter.allow(
+                    RegExp(r'^(\d+)?\.?\d{0,2}')))
+              ],
               onChanged: (value) => productoFormulario.nombre = value,
               // ignore: body_might_complete_normally_nullable
               validator: (value) {
@@ -127,10 +134,9 @@ class _FormularioProducto extends StatelessWidget {
             ),
             SizedBox(height: 30),
             SwitchListTile.adaptive(
-              value: true,
-              onChanged: (value) {
-                //TODO pendiente accion
-              },
+              value: productoFormulario.disponible,
+              onChanged: (value) =>productoIni
+                  .habilitaBoton(value),
               title: Text('disponible'),
               activeColor: Colors.amber,
             )

@@ -14,15 +14,18 @@ final String? url;
           decoration: _constructorCajaDecoracion(),
           width: double.infinity,
           height:450 ,
-          child: ClipRRect(
-            borderRadius:BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)) ,
-            child: url==null
-            ?Image(image: AssetImage('assets/no-image.png'),
-            fit:BoxFit.cover):
-            
-            FadeInImage(placeholder: AssetImage('assets/jar-loading.gif'),
-             image: NetworkImage(url!),
-             fit: BoxFit.cover,),
+          child: Opacity(
+            opacity: 0.8,
+            child: ClipRRect(
+              borderRadius:BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)) ,
+              child: url==null
+              ?Image(image: AssetImage('assets/no-image.png'),
+              fit:BoxFit.cover):
+              
+              FadeInImage(placeholder: AssetImage('assets/jar-loading.gif'),
+               image: NetworkImage(url!),
+               fit: BoxFit.cover,),
+            ),
           ),
         ),
       ),
@@ -31,7 +34,7 @@ final String? url;
 
   BoxDecoration _constructorCajaDecoracion() {
     return BoxDecoration(
-      color: Colors.amber,
+      color: Colors.black,
       borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
       boxShadow:[ 
         BoxShadow(
