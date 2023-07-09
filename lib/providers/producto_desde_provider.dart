@@ -6,8 +6,7 @@ class ProductoDesdeProvider extends ChangeNotifier {
   Productos producto;
   ProductoDesdeProvider(this.producto);
 
- habilitaBoton(bool value) {
-    print(value);
+  habilitaBoton(bool value) {
     producto.disponible = value;
     notifyListeners();
   }
@@ -15,6 +14,7 @@ class ProductoDesdeProvider extends ChangeNotifier {
   bool isValidForm() {
     // ?? especifica que regresa null
     //? por si no esta asignado a ningun valor
+    print(producto.nombre);
     return formKey.currentState?.validate() ?? false;
   }
 }

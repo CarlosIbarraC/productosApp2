@@ -30,6 +30,7 @@ class _cuerpoPantallaProducto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final producForm = Provider.of<ProductoDesdeProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         // se oculta el teclado al hacer scroll
@@ -77,7 +78,10 @@ class _cuerpoPantallaProducto extends StatelessWidget {
             Icons.save_outlined,
             color: Colors.black38,
           ),
-          onPressed: () {}),
+          onPressed: () async {
+            if (!producForm.isValidForm()) return;
+            await productService.grabarProducto(producForm.producto);
+          }),
     );
   }
 }
@@ -97,51 +101,52 @@ class _FormularioProducto extends StatelessWidget {
         decoration: _buildBoxDecoration(),
         padding: EdgeInsets.symmetric(horizontal: 15),
         child: Form(
+            key: productoIni.formKey,
             child: Column(
-          children: [
-            SizedBox(height: 10),
-            TextFormField(
-              initialValue: productoFormulario.nombre,
-              onChanged: (value) => productoFormulario.nombre = value,
-              // ignore: body_might_complete_normally_nullable
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'El nombre no es valido';
-                }
-              },
-              decoration: InputDecorations.authInputDecoration(
-                  hintText: 'nombre del producto', labelText: 'Producto:'),
-            ),
-            SizedBox(height: 40),
-            TextFormField(
-              initialValue: '${productoFormulario.precio}',
-              inputFormatters: [
-                (FilteringTextInputFormatter.allow(
-                    RegExp(r'^(\d+)?\.?\d{0,2}')))
+              children: [
+                SizedBox(height: 10),
+                TextFormField(
+                  initialValue: productoFormulario.nombre,
+                  onChanged: (value) => productoFormulario.nombre = value,
+                  // ignore: body_might_complete_normally_nullable
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'El nombre no es valido';
+                    }
+                  },
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: 'nombre del producto', labelText: 'Producto:'),
+                ),
+                SizedBox(height: 40),
+                TextFormField(
+                  initialValue: '${productoFormulario.precio}',
+                  inputFormatters: [
+                    (FilteringTextInputFormatter.allow(
+                        RegExp(r'^(\d+)?\.?\d{0,2}')))
+                  ],
+                  onChanged: (value) => productoFormulario.nombre = value,
+                  // ignore: body_might_complete_normally_nullable
+                  validator: (value) {
+                    if (double.tryParse(value!) == null) {
+                      productoFormulario.precio = 0;
+                    } else {
+                      productoFormulario.precio =
+                          double.parse(value.toString());
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: '\$precio', labelText: 'Precio:'),
+                ),
+                SizedBox(height: 30),
+                SwitchListTile.adaptive(
+                  value: productoFormulario.disponible,
+                  onChanged: (value) => productoIni.habilitaBoton(value),
+                  title: Text('disponible'),
+                  activeColor: Colors.amber,
+                )
               ],
-              onChanged: (value) => productoFormulario.nombre = value,
-              // ignore: body_might_complete_normally_nullable
-              validator: (value) {
-                if (double.tryParse(value!) == null) {
-                  productoFormulario.precio = 0;
-                } else {
-                  productoFormulario.precio = value as double;
-                }
-              },
-              keyboardType: TextInputType.number,
-              decoration: InputDecorations.authInputDecoration(
-                  hintText: '\$precio', labelText: 'Precio:'),
-            ),
-            SizedBox(height: 30),
-            SwitchListTile.adaptive(
-              value: productoFormulario.disponible,
-              onChanged: (value) =>productoIni
-                  .habilitaBoton(value),
-              title: Text('disponible'),
-              activeColor: Colors.amber,
-            )
-          ],
-        )),
+            )),
       ),
     );
   }
